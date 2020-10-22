@@ -1,5 +1,9 @@
 package ru.digitalhabbits.homework1.service;
 
+import com.google.gson.JsonObject;
+import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -10,6 +14,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -40,7 +45,16 @@ public class WikipediaClient {
             try{
                 // Cheking response status
                 if (response != null && getResponseCode(response) == SUCCESS_HTTP_STATUS_CODE) {
-                    return entityToString(response.getEntity());
+                    String json = entityToString(response.getEntity());
+                    JSONArray textsFound = JsonPath.read(json, "$.query.pages.*.extract");
+                    StringBuilder sbuilder = new StringBuilder();
+                    for(Object object: textsFound){
+                        sbuilder.append(object.toString()+" ");
+                    }
+                    String text = sbuilder.toString();
+                    text.trim();
+
+                    return text.replaceAll("\\\\n", "\n").toLowerCase();
                 } else {
                     logger.error("Something went wrong with response, programm will exit");
                     System.exit(1);

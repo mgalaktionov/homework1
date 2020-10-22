@@ -29,6 +29,9 @@ allprojects { ->
 
     dependencies {
         implementation "com.google.code.findbugs:jsr305:$fingBugsVersion"
+        // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+        compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
+
 
         // Testing
         testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"

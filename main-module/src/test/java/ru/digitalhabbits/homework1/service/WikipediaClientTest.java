@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.tuple.Pair.of;
@@ -16,7 +17,7 @@ class WikipediaClientTest {
 
     @ParameterizedTest
     @MethodSource("generateSearchData")
-    void search(Pair<String, String> searchData) {
+    void search(Pair<String, String> searchData) throws IOException {
         final String searchResult = client.search(searchData.getKey());
         assertFalse(searchResult.isBlank());
         assertTrue(searchResult.contains(searchData.getValue()));
