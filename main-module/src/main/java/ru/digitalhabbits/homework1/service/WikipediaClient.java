@@ -1,25 +1,18 @@
 package ru.digitalhabbits.homework1.service;
 
-import com.google.gson.JsonObject;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -38,18 +31,18 @@ public class WikipediaClient {
         //Creating get request to wikipedia api
         HttpGet getReq = prepareHttpGet(prepareSearchUrl(searchString));
         CloseableHttpClient client = HttpClients.createDefault();
-        logger.info("Request url = "+prepareSearchUrl(searchString).toString());
+        logger.info("Request url = " + prepareSearchUrl(searchString).toString());
         CloseableHttpResponse response;
         try {
             response = client.execute(getReq);
-            try{
+            try {
                 // Cheking response status
                 if (response != null && getResponseCode(response) == SUCCESS_HTTP_STATUS_CODE) {
                     String json = entityToString(response.getEntity());
                     JSONArray textsFound = JsonPath.read(json, "$.query.pages.*.extract");
                     StringBuilder sbuilder = new StringBuilder();
-                    for(Object object: textsFound){
-                        sbuilder.append(object.toString()+" ");
+                    for (Object object : textsFound) {
+                        sbuilder.append(object.toString() + " ");
                     }
                     String text = sbuilder.toString();
                     text.trim();
@@ -59,20 +52,20 @@ public class WikipediaClient {
                     logger.error("Something went wrong with response, programm will exit");
                     System.exit(1);
                 }
-            }finally {
+            } finally {
                 response.close();
             }
         } catch (IOException e) {
             logger.info("IO exception was caught, system exit");
             e.printStackTrace();
             System.exit(1);
-        }finally {
+        } finally {
             client.close();
         }
         return "";
     }
 
-    private int getResponseCode(CloseableHttpResponse response){
+    private int getResponseCode(CloseableHttpResponse response) {
         return response.getStatusLine().getStatusCode();
     }
 
@@ -93,7 +86,7 @@ public class WikipediaClient {
                     .addParameter("format", "json")
                     .addParameter("titles", searchString)
                     .addParameter("prop", "extracts")
-                    .addParameter("explaintext","")
+                    .addParameter("explaintext", "")
                     .build();
         } catch (URISyntaxException exception) {
             throw new RuntimeException(exception);
