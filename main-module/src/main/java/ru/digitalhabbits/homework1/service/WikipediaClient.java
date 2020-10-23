@@ -47,7 +47,7 @@ public class WikipediaClient {
                     String text = sbuilder.toString();
                     text.trim();
 
-                    return text.replaceAll("\\\\n", "\n").toLowerCase();
+                    return text.replaceAll("\\\\n", "\n");
                 } else {
                     logger.error("Something went wrong with response, programm will exit");
                     System.exit(1);
