@@ -2,6 +2,9 @@ package ru.digitalhabbits.homework1.plugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class FrequencyDictionaryPlugin

@@ -1,41 +1,38 @@
 package ru.digitalhabbits.homework1.plugin;
 
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
 import java.util.*;
 
 class FrequencyDictionary {
-    private String text;
-    private HashMap<String,Counter> frequencyDictionary;
-    private LinkedHashMap<String,Counter> sortedfrequencyDictionary;
+
+    private LinkedHashMap<String,Counter> frequencyDictionary;
 
     public FrequencyDictionary(String text) {
-        this.text = text;
-        this.frequencyDictionary = createFreqDict(createDictionary(splitText()),splitText());
-        this.sortedfrequencyDictionary = sortDictionary();
+        var words = splitText(text);
+        var dictionary = createDictionary(words);
+        this.frequencyDictionary = createFreqDict(dictionary,words);
     }
 
-    private LinkedHashMap<String, Counter> sortDictionary(){
-        Comparator<Map.Entry<String, Counter>> freqComparator = new Comparator<Map.Entry<String, Counter>>() {
+    private LinkedHashMap<String, Counter> sortDictionary(HashMap<String, Counter> unsortedDict){
+        var freqComparator = new Comparator<Map.Entry<String, Counter>>() {
             @Override
-            public int compare(Map.Entry<String, Counter> entryt1, Map.Entry<String, Counter> entryt2) {
-                Counter cnt1 = entryt1.getValue();
-                Counter cnt2 = entryt2.getValue();
+            public int compare(Map.Entry<String, Counter> entry1, Map.Entry<String, Counter> entry2) {
+                Counter cnt1 = entry1.getValue();
+                Counter cnt2 = entry2.getValue();
                 return  cnt1.compareTo(cnt2);
             }
         };
 
-        List<Map.Entry<String, Counter>> entryList = new ArrayList<>(frequencyDictionary.entrySet());
+        var entryList = new ArrayList<>(unsortedDict.entrySet());
         Collections.sort(entryList,freqComparator);
-        LinkedHashMap<String, Counter> sortedDictionary = new LinkedHashMap<>(entryList.size());
-        for(Map.Entry<String, Counter> entry: entryList){
+        var sortedDictionary = new LinkedHashMap<String, Counter>(entryList.size());
+        for(var entry: entryList){
             sortedDictionary.put(entry.getKey(),entry.getValue());
         }
         return sortedDictionary;
     }
-    private List<String> splitText(){
-        return Arrays.asList(this.text.trim().split("[\\s.,;!?]+"));
+    private List<String> splitText(String text){
+        return List.of(text.trim().split("[\\s.,;!?]+"));
 
     }
 
@@ -47,7 +44,7 @@ class FrequencyDictionary {
     }
 
 
-    private HashMap<String, Counter> createFreqDict(HashSet<String> dictionary, List<String> words){
+    private LinkedHashMap<String, Counter> createFreqDict(HashSet<String> dictionary, List<String> words){
         HashMap<String, Counter> freqDictionary = new HashMap<>();
         for(String word: dictionary){
             freqDictionary.put(word,new Counter());
@@ -58,16 +55,16 @@ class FrequencyDictionary {
             }
         }
 
-        return freqDictionary;
+        return sortDictionary(freqDictionary);
     }
 
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        for (String key: this.sortedfrequencyDictionary.keySet()){
+        for (String key: this.frequencyDictionary.keySet()){
             builder.append(key)
                     .append(" ")
-                    .append(this.sortedfrequencyDictionary.get(key).toString())
+                    .append(this.frequencyDictionary.get(key).toString())
                     .append("\n");
         }
         return builder.toString();
