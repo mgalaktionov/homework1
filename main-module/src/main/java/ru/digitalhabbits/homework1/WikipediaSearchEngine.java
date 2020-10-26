@@ -24,7 +24,7 @@ public class WikipediaSearchEngine {
         // 1. сделать запрос в wikipedia, получить результат в формате json.
         final WikipediaClient client = new WikipediaClient();
         final String text = client.search(searchString);
-        logger.info("FORMATTED TEXT"+'\n'+text);
+        logger.info("FORMATTED TEXT \n {}",text);
 
         // 2. очистить папку с результатами
         final FileEngine fileEngine = new FileEngine();

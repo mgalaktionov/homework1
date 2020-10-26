@@ -9,7 +9,7 @@ dependencies {
 
 task copyPlugin(type: Copy) {
     from file("$buildDir/libs/${project.name}.jar")
-    into file("$rootDir/plugins/")
+    into file("$rootDir/main-module/plugins/")
 }
 
 build.dependsOn(copyPlugin)

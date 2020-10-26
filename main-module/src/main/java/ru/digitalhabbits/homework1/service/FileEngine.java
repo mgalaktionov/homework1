@@ -18,11 +18,12 @@ public class FileEngine {
     private static final String RESULT_FILE_PATTERN = "results-%s.txt";
     private static final String RESULT_DIR = "results";
     private static final String RESULT_EXT = "txt";
+    private static final String WIN_DELIMITER = "\\";
 
     public boolean writeToFile(@Nonnull String text, @Nonnull String pluginName) {
         // TODO: NotImplemented
         String resultDirPath = System.getProperty("user.dir") + RESULT_DIR;
-        String fileName = resultDirPath + "\\" + String.format(RESULT_FILE_PATTERN, pluginName);
+        String fileName = resultDirPath + WIN_DELIMITER + String.format(RESULT_FILE_PATTERN, pluginName);
         logger.info("'{}' results are in '{}'", pluginName, fileName);
         try {
             RandomAccessFile stream = new RandomAccessFile(fileName, "rw");

@@ -50,5 +50,5 @@ allprojects { ->
 }
 
 clean {
-    delete fileTree(dir: "${project.rootDir}/plugins", include: "*.jar").files
+    delete fileTree(dir: "${project.rootDir}/main-module/plugins", include: "*.jar").files
 }
