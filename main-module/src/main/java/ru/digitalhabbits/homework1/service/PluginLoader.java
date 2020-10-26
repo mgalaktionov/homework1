@@ -12,6 +12,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -25,12 +26,12 @@ public class PluginLoader {
         var pluginDir = new File(searchDir);
 
         var classNames = new ArrayList<String>();
-        for(String jar: pluginDir.list()){
+        for(String jar: Objects.requireNonNull(pluginDir.list())){
             classNames.addAll(getClassesNames(searchDir+"/"+jar));
         }
 
 
-        var loader = new URLClassLoader(Arrays.stream(pluginDir.list())
+        var loader = new URLClassLoader(Arrays.stream(Objects.requireNonNull(pluginDir.list()))
                 .map(fileName -> {
                     try {
                         return new URL("file:///" + searchDir + fileName);

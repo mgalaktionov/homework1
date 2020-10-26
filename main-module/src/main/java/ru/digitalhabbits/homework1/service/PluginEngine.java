@@ -18,13 +18,10 @@ public class PluginEngine {
                 result = (String) applyMethod.invoke(cls.getConstructor().newInstance(),text);
             }
             return result;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
         }
+        result = "";
         return result;
     }
 }

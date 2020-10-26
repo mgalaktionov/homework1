@@ -20,36 +20,34 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class WikipediaClient {
-    private final int SUCCESS_HTTP_STATUS_CODE = 200;
     public static final String WIKIPEDIA_SEARCH_URL = "https://en.wikipedia.org/w/api.php";
     private final Logger logger = getLogger(WikipediaClient.class);
+    private static final int SUCCESS_HTTP_STATUS_CODE = 200;
 
     @Nonnull
-    public String search(@Nonnull String searchString) throws IOException {
-        final URI uri = prepareSearchUrl(searchString);
-        // TODO: NotImplemented
+    public String search(@Nonnull String searchString) {
+
         //Creating get request to wikipedia api
         HttpGet getReq = prepareHttpGet(prepareSearchUrl(searchString));
-        CloseableHttpClient client = HttpClients.createDefault();
-        logger.info("Request url = " + prepareSearchUrl(searchString).toString());
-        CloseableHttpResponse response;
-        try {
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            logger.info("Request url = '{}", prepareSearchUrl(searchString));
+            CloseableHttpResponse response;
             response = client.execute(getReq);
             try {
-                // Cheking response status
+                // Checking response status
+
                 if (response != null && getResponseCode(response) == SUCCESS_HTTP_STATUS_CODE) {
                     String json = entityToString(response.getEntity());
                     JSONArray textsFound = JsonPath.read(json, "$.query.pages.*.extract");
-                    StringBuilder sbuilder = new StringBuilder();
+                    StringBuilder builder = new StringBuilder();
                     for (Object object : textsFound) {
-                        sbuilder.append(object.toString() + " ");
+                        builder.append(object.toString())
+                                .append(" ");
                     }
-                    String text = sbuilder.toString();
-                    text.trim();
-
+                    String text = builder.toString();
                     return text.replaceAll("\\\\n", "\n");
                 } else {
-                    logger.error("Something went wrong with response, programm will exit");
+                    logger.error("Something went wrong with response, program will exit");
                     System.exit(1);
                 }
             } finally {
@@ -59,8 +57,6 @@ public class WikipediaClient {
             logger.info("IO exception was caught, system exit");
             e.printStackTrace();
             System.exit(1);
-        } finally {
-            client.close();
         }
         return "";
     }
