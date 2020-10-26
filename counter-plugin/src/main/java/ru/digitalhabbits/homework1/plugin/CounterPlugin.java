@@ -12,11 +12,10 @@ public class CounterPlugin
     @Nullable
     @Override
     public String apply(@Nonnull String text) {
-        // TODO: NotImplemented
         var strings = Arrays.asList(text.split("\n").clone());
         var stringsCount = strings.size();
         var wordsCount = strings.stream()
-                .map(string -> string.replaceAll("\n", "\\s"))
+                .map(string -> string.replace("\n", "\\s"))
                 .map(formStr -> List.of(formStr.split("\\s")))
                 .mapToLong(List::size)
                 .sum();
