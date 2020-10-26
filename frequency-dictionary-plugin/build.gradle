@@ -1,15 +1,13 @@
 apply plugin: "base"
 
 dependencies {
-
-    implementation 'org.jetbrains:annotations:19.0.0'
     implementation project(":plugin-interface")
     testImplementation "org.apache.commons:commons-lang3:$commonsLangVersion"
 }
 
 task copyPlugin(type: Copy) {
     from file("$buildDir/libs/${project.name}.jar")
-    into file("$rootDir/main-module/plugins/")
+    into file("$rootDir/plugins/")
 }
 
 build.dependsOn(copyPlugin)

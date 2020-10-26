@@ -38,12 +38,14 @@ public class WikipediaSearchEngine {
         // 4. выполнить действия над результатом и записать в файл
         final PluginEngine pluginEngine = new PluginEngine();
         for (Class<? extends PluginInterface> plugin: plugins) {
-            final String result = pluginEngine.applyPlugin(plugin, text);
+            if(plugin.getSimpleName().contains("Plugin")) {
+                final String result = pluginEngine.applyPlugin(plugin, text);
 
-            final String pluginName = plugin.getSimpleName();
-            logger.info("Apply '{}' plugin get result {}", pluginName, result);
+                final String pluginName = plugin.getSimpleName();
+                logger.info("Apply '{}' plugin get result {}", pluginName, result);
 
-            fileEngine.writeToFile(result, pluginName);
+                fileEngine.writeToFile(result, pluginName);
+            }
         }
     }
 }
