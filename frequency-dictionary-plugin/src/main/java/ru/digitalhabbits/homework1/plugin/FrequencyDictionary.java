@@ -1,56 +1,50 @@
 package ru.digitalhabbits.homework1.plugin;
 
-import org.jetbrains.annotations.NotNull;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 class FrequencyDictionary {
 
-    private LinkedHashMap<String,Counter> frequencyDictionary;
+    private static final String SPLITTER = "[\\s.,;!?]+";
+    private final Map<String, Counter> freqDict;
 
     public FrequencyDictionary(String text) {
         var words = splitText(text);
-        var dictionary = createDictionary(words);
-        this.frequencyDictionary = createFreqDict(dictionary,words);
+        var dictionary = getVocabulary(words);
+        this.freqDict = createFreqDict(dictionary, words);
     }
 
-    private LinkedHashMap<String, Counter> sortDictionary(HashMap<String, Counter> unsortedDict){
-        var freqComparator = new Comparator<Map.Entry<String, Counter>>() {
-            @Override
-            public int compare(Map.Entry<String, Counter> entry1, Map.Entry<String, Counter> entry2) {
-                Counter cnt1 = entry1.getValue();
-                Counter cnt2 = entry2.getValue();
-                return  cnt1.compareTo(cnt2);
-            }
-        };
-
-        var entryList = new ArrayList<>(unsortedDict.entrySet());
-        Collections.sort(entryList,freqComparator);
-        var sortedDictionary = new LinkedHashMap<String, Counter>(entryList.size());
-        for(var entry: entryList){
-            sortedDictionary.put(entry.getKey(),entry.getValue());
-        }
-        return sortedDictionary;
-    }
-    private List<String> splitText(String text){
-        return List.of(text.trim().split("[\\s.,;!?]+"));
-
+    private List<String> splitText(String text) {
+        return List.of(text.trim().split(SPLITTER));
     }
 
-    private HashSet<String> createDictionary(List<String> words){
-
-        HashSet<String> dictionary = new HashSet<>();
-        dictionary.addAll(words);
-        return dictionary;
+    private HashSet<String> getVocabulary(List<String> words) {
+        return new HashSet<>(words);
     }
 
+    private Map<String, Counter> sortDictionary(HashMap<String, Counter> unsortedDict) {
 
-    private LinkedHashMap<String, Counter> createFreqDict(HashSet<String> dictionary, List<String> words){
+        return unsortedDict
+                .entrySet()
+                .stream()
+                .collect(Collectors.toUnmodifiableMap(
+                        Map.Entry<String, Counter>::getKey,
+                        Map.Entry<String, Counter>::getValue
+                        )
+                );
+    }
+
+    private Map<String, Counter> createFreqDict(HashSet<String> dictionary, List<String> words) {
         HashMap<String, Counter> freqDictionary = new HashMap<>();
-        for(String word: dictionary){
-            freqDictionary.put(word,new Counter());
+        for (String word : dictionary) {
+            freqDictionary.put(word, new Counter());
         }
-        for(String word: words){
-            if (freqDictionary.containsKey(word)){
+
+        for (String word : words) {
+            if (freqDictionary.containsKey(word)) {
                 freqDictionary.get(word).increment();
             }
         }
@@ -59,44 +53,32 @@ class FrequencyDictionary {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
-        for (String key: this.frequencyDictionary.keySet()){
-            builder.append(key)
+        for (Map.Entry<String, Counter> entry : this.freqDict.entrySet()) {
+            builder.append(entry.getKey())
                     .append(" ")
-                    .append(this.frequencyDictionary.get(key).toString())
+                    .append(entry.getValue())
                     .append("\n");
         }
         return builder.toString();
     }
 
-    private static class Counter{
+    private static class Counter {
         private int count;
 
         public Counter() {
             this.count = 0;
         }
 
-        public void increment(){
+        public void increment() {
             this.count++;
         }
 
-        public int getCount() {
-            return count;
-        }
-
         @Override
-        public String toString(){
+        public String toString() {
             return Integer.toString(this.count);
         }
 
-        public int compareTo(@NotNull Counter cnt) {
-            if(this.count == cnt.getCount()){
-                return 0;
-            }else if(this.count > cnt.getCount()){
-                return -1;
-            }
-            return 1;
-        }
     }
 }
