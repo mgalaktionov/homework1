@@ -8,23 +8,22 @@ import ru.digitalhabbits.homework1.service.PluginLoader;
 import ru.digitalhabbits.homework1.service.WikipediaClient;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class WikipediaSearchEngine {
     private static final Logger logger = getLogger(WikipediaSearchEngine.class);
-
+    private static final String PLUGIN_POSTFIX = "Plugin";
     private static final String PLUGIN_DIR = "plugins";
 
-    public void search(@Nonnull String searchString) throws IOException {
+    public void search(@Nonnull String searchString) {
         logger.info("Searching '{}' on wikipedia", searchString);
 
         // 1. сделать запрос в wikipedia, получить результат в формате json.
         final WikipediaClient client = new WikipediaClient();
         final String text = client.search(searchString);
-        logger.info("FORMATTED TEXT \n {}",text);
+        logger.info("FORMATTED TEXT \n {}", text);
 
         // 2. очистить папку с результатами
         final FileEngine fileEngine = new FileEngine();
@@ -38,7 +37,7 @@ public class WikipediaSearchEngine {
         // 4. выполнить действия над результатом и записать в файл
         final PluginEngine pluginEngine = new PluginEngine();
         for (Class<? extends PluginInterface> plugin: plugins) {
-            if(plugin.getSimpleName().contains("Plugin")) {
+            if (plugin.getSimpleName().contains(PLUGIN_POSTFIX)) {
                 final String result = pluginEngine.applyPlugin(plugin, text);
 
                 final String pluginName = plugin.getSimpleName();

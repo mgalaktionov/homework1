@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 
 public class PluginEngine {
 
-    @Nonnull
     public  <T extends PluginInterface> String applyPlugin(@Nonnull Class<T> cls, @Nonnull String text) {
         String result = null;
         try {
