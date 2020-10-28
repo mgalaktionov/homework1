@@ -57,10 +57,7 @@ public class WikipediaSearchEngine {
             for (Class<? extends PluginInterface> plugin : plugins) {
                 if (plugin.getSimpleName().contains(PLUGIN_POSTFIX)) {
                     final String result = pluginEngine.applyPlugin(plugin, text);
-
                     final String pluginName = plugin.getSimpleName();
-                    logger.info("Apply '{}' plugin get result {}", pluginName, result);
-
                     fileEngine.writeToFile(result, pluginName);
                 }
             }
