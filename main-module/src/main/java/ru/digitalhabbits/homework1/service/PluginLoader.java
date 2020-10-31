@@ -22,7 +22,7 @@ public class PluginLoader {
     @Nonnull
     public List<Class<? extends PluginInterface>> loadPlugins(@Nonnull String pluginDirName) {
         var currentDir = System.getProperty("user.dir");
-        var searchDir = currentDir + "\\" + pluginDirName + "\\";
+        var searchDir = currentDir + "/" + pluginDirName + "/";
         var pluginDir = new File(searchDir);
 
         var classNames = new ArrayList<String>();
