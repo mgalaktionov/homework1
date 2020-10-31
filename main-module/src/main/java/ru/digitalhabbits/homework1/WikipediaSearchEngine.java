@@ -24,7 +24,7 @@ public class WikipediaSearchEngine {
 
         // 1. сделать запрос в wikipedia, получить результат в формате json.
         final WikipediaClient client = new WikipediaClient();
-        var pool = Executors.newFixedThreadPool(3);
+        var pool = Executors.newSingleThreadExecutor();
         Callable<String> callable = new WikiCallable(searchString,client);
         Future<String> futureText = pool.submit(callable);
         //final String text = client.search(searchString);
