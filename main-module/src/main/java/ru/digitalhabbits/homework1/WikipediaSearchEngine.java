@@ -24,7 +24,7 @@ public class WikipediaSearchEngine {
 
         // 1. сделать запрос в wikipedia, получить результат в формате json.
         final WikipediaClient client = new WikipediaClient();
-        var pool = Executors.newSingleThreadExecutor();
+        var pool = Executors.newFixedThreadPool(3);
         Callable<String> callable = new WikiCallable(searchString,client);
         Future<String> futureText = pool.submit(callable);
         //final String text = client.search(searchString);
@@ -57,7 +57,10 @@ public class WikipediaSearchEngine {
             for (Class<? extends PluginInterface> plugin : plugins) {
                 if (plugin.getSimpleName().contains(PLUGIN_POSTFIX)) {
                     final String result = pluginEngine.applyPlugin(plugin, text);
+
                     final String pluginName = plugin.getSimpleName();
+                    logger.info("Apply '{}' plugin get result {}", pluginName, result);
+
                     fileEngine.writeToFile(result, pluginName);
                 }
             }

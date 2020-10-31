@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 public class PluginEngine {
 
     public  <T extends PluginInterface> String applyPlugin(@Nonnull Class<T> cls, @Nonnull String text) {
-        String result = "";
+        String result = null;
         try {
             Method applyMethod = cls.getMethod("apply", String.class);
             Class<?> returnType = applyMethod.getReturnType();
@@ -20,6 +20,7 @@ public class PluginEngine {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
         }
+        result = "";
         return result;
     }
 }

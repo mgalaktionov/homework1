@@ -23,20 +23,18 @@ public class FileEngine {
         String fileName = resultDirPath + WIN_DELIMITER + String.format(RESULT_FILE_PATTERN, pluginName);
         logger.info("'{}' results are in '{}'", pluginName, fileName);
         File file = new File(fileName);
-        if (file.getParentFile().mkdirs()) {
-            try {
-                file.createNewFile();
-                FileWriter writer = new FileWriter(file);
-                writer.write(text);
-                writer.flush();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
+        file.mkdirs();
+        try {
+            file.createNewFile();
+            FileWriter writer = new FileWriter(file);
+            writer.write(text);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void cleanResultDir() {

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 class FrequencyDictionary {
 
-    private static final String SPLITTER = "[\\s.,;!?></:()[/>]]+";
+    private static final String SPLITTER = "[\\s.,;!?]+";
     private final Map<String, Counter> freqDict;
 
     public FrequencyDictionary(String text) {
@@ -26,6 +26,7 @@ class FrequencyDictionary {
     }
 
     private Map<String, Counter> sortDictionary(HashMap<String, Counter> unsortedDict) {
+
         return unsortedDict
                 .entrySet()
                 .stream()
